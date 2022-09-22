@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+
 use App\Models\book;
 use App\Models\author;
 use App\Models\publisher;
+use App\Providers\RouteServiceProvider;
 
 class BookController extends Controller
 {
@@ -74,7 +78,7 @@ class BookController extends Controller
 
         $this->assignRelationsToBook($book, $publisher, $author);
 
-        return redirect(route('books.index'));
+        return redirect('/');
     }
 
     public function get($id) {
@@ -82,6 +86,13 @@ class BookController extends Controller
         $book->authors;     // Appends an array of authors to the book
                             // You can get with 'authors[0].name'
         return response($book);
+    }
+
+    private function getBook($id) {
+        $book = $this->getBookById($id);
+        $book->authors;     // Appends an array of authors to the book
+        $book->publisher;
+        return $book;
     }
 
     private function getBookById($id): book {
@@ -92,10 +103,11 @@ class BookController extends Controller
         return book::firstWhere('title', $bookTitle);
     }
 
-    private function getAllBooks() {
+    public function getAllBooks() {
         $books = book::all();
         foreach ($books as $book) {
             $book->authors;
+            $book->publisher;
         }
         return $books;
     }
@@ -142,6 +154,17 @@ class BookController extends Controller
         // return 'Hello World!';
         return Inertia::render('Books/Index', [
             'books' => $this->getAllBooks(), // temp until pagination docs loads
+        ]);
+    }
+
+    public function welcome()
+    {
+        return Inertia::render('Welcome', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'laravelVersion' => Application::VERSION,
+            'phpVersion' => PHP_VERSION,
+            'books' => $this->getAllBooks(),
         ]);
     }
 
@@ -197,7 +220,25 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        //
+        $input = $this->validateBookInput($request);
+
+        $author = $this->createOrFindAuthor($input['author']);
+        $publisher = $this->createOrFindPublisher($input['publisher']);
+
+        $book['title'] = $input['title'];
+        $book['year_published'] = $input['year_published'];
+        $book['volume'] = $input['volume'];
+
+        $this->assignRelationsToBook($book, $publisher, $author);
+        // $book->update($input);
+
+        return redirect('/');
+    }
+
+    public function updateBook(Request $request, $id) {
+        return Inertia::render('Books/Update', [
+            'book' => $this->getBook($id),
+        ]);
     }
 
     /**
@@ -208,6 +249,9 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        // $this->authorize('delete', $book);
+        $book->authors()->detach();
+        $book->delete();
+        return redirect('/');
     }
 }

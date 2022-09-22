@@ -2,73 +2,101 @@ import React, { useState } from 'react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
+import NavLinkButton from '@/Components/NavLinkButton';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/inertia-react';
-// import route from 'vendor/tightenco/ziggy/src/js';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBook } from '@fortawesome/free-solid-svg-icons';
 
 export default function Authenticated({ auth, header, children }) {
   const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
-  return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white border-b border-gray-100">
+  const getLoginLogoutButton = (authentication) => {
+    if (typeof authentication.user?.username !== 'undefined') return (
+      <Dropdown>
+        <Dropdown.Trigger>
+          <span className="inline-flex rounded-md">
+            <button
+              type="button"
+              className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
+            >
+              {`${authentication?.user?.username} | ${authentication?.user?.name}`}
+
+              <svg
+                className="ml-2 -mr-0.5 h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </span>
+        </Dropdown.Trigger>
+
+        <Dropdown.Content>
+          <Dropdown.Link href={route('logout')} method="post" as="button">
+            Log Out
+          </Dropdown.Link>
+        </Dropdown.Content>
+      </Dropdown>
+    ) 
+    else return (
+      <>
+        <NavLinkButton
+          href={route('login')}
+        >
+          Login
+        </NavLinkButton>
+        <NavLinkButton
+          href={route('register')}
+        >
+          Register
+        </NavLinkButton>
+      </>
+    )
+  };
+
+  const Navbar = () => {
+    return (
+      <nav 
+        className="
+        bg-red-800 
+          border-b 
+          border-white-100
+          text-white
+        "
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex">
               <div className="shrink-0 flex items-center">
                 <Link href="/">
-                  <h1
-                    className='font-bold text-lg'
-                  >
-                    theLib.sys
-                  </h1>
+                  <div className="font-bold text-3xl flex items-center justify-between space-x-1">
+                    <FontAwesomeIcon icon={faBook} />
+                    <h1>
+                      theLib.sys
+                    </h1>
+                  </div>
                   {/* <ApplicationLogo className="block h-9 w-auto text-gray-500" /> */}
                 </Link>
               </div>
 
               <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                  Dashboard
-                </NavLink>
                 <NavLink href={route('books.index')} active={route().current('books.index')}>
-                  Books
+                  <p className='hover:text-gray-500'>Add a Book</p>
                 </NavLink>
               </div>
             </div>
 
             <div className="hidden sm:flex sm:items-center sm:ml-6">
               <div className="ml-3 relative">
-                <Dropdown>
-                  <Dropdown.Trigger>
-                    <span className="inline-flex rounded-md">
-                      <button
-                        type="button"
-                        className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
-                      >
-                        {`${auth.user.username} | ${auth.user.name}`}
-
-                        <svg
-                          className="ml-2 -mr-0.5 h-4 w-4"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </button>
-                    </span>
-                  </Dropdown.Trigger>
-
-                  <Dropdown.Content>
-                    <Dropdown.Link href={route('logout')} method="post" as="button">
-                      Log Out
-                    </Dropdown.Link>
-                  </Dropdown.Content>
-                </Dropdown>
+                {getLoginLogoutButton(auth)}
               </div>
             </div>
 
@@ -107,8 +135,8 @@ export default function Authenticated({ auth, header, children }) {
 
           <div className="pt-4 pb-1 border-t border-gray-200">
             <div className="px-4">
-              <div className="font-medium text-base text-gray-800">{auth.user.name}</div>
-              <div className="font-medium text-sm text-gray-500">{auth.user.email}</div>
+              <div className="font-medium text-base text-gray-800">{auth?.user?.name}</div>
+              <div className="font-medium text-sm text-gray-500">{auth?.user?.email}</div>
             </div>
 
             <div className="mt-3 space-y-1">
@@ -119,6 +147,13 @@ export default function Authenticated({ auth, header, children }) {
           </div>
         </div>
       </nav>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+
+      {Navbar()}
 
       {header && (
         <header className="bg-white shadow">

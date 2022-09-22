@@ -5,23 +5,24 @@ import BookCreateUpdateForm from '@/Components/BookCreateUpdateForm';
 
 import { useForm, Head } from '@inertiajs/inertia-react';
 
-function Index({ auth }) {
-  const { data, setData, post, processing, reset, errors } = useForm({
-    title: '',
-    author: '',
-    publisher: '',
-    year_published: '',
-    volume: '',
+export default function Update({ auth, book }) {
+  console.log(auth);
+  const { data, setData, patch, processing, reset, errors } = useForm({
+    title: book.title,
+    author: book.authors[0].name,
+    publisher: book.publisher.name,
+    year_published: book.year_published,
+    volume: book.volume,
   });
 
   const submit = (e) => {
     e.preventDefault();
-    post(route('books.store'), { onSuccess: reset() });
+    patch(route('books.update', book.id));
   }
 
   return (
     <AuthenticatedLayout auth={auth}>
-      <Head title='Add a Book' />
+      <Head title='Edit a Book' />
 
       <BookCreateUpdateForm
         data={data}
@@ -33,5 +34,3 @@ function Index({ auth }) {
     </AuthenticatedLayout>
   )
 }
-
-export default Index;
