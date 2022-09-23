@@ -10,14 +10,46 @@ export default function Welcome({ auth, books }) {
       <AuthenticatedLayout
           auth={auth}
           /* errors={} */
-          // header={<h2 className="font-semibold text-xl text-white-800 leading-tight">Library</h2>}
       >
         <Head title='Home' />
 
-        <LibraryDisplay 
-          auth={auth}
-          books={books}
-        />
+        {
+          books.length ? (
+            <LibraryDisplay 
+              auth={auth}
+              books={books}
+            />
+          ) : (
+            <div className="
+              grid
+              h-[90vh]
+              place-items-center
+            ">
+              <h1
+                className='
+                  text-8xl
+                  font-heavy
+                  text-center
+                  break-words
+                  mx-9
+                '
+              >
+                No books in library.
+              </h1>
+              <h1
+                className='
+                  text-8xl
+                  font-heavy
+                  text-center
+                  break-words
+                  mx-9
+                '
+              >
+                Please add a book to use.
+              </h1>
+            </div>
+          )
+        }
       </AuthenticatedLayout>
     </>
   )

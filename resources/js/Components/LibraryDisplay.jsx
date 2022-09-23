@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from '@inertiajs/inertia-react';
+import Modal from 'react-modal';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faCancel } from '@fortawesome/free-solid-svg-icons';
 
-export function LibraryCard(book, index, auth) {
+export function LibraryCard(
+  book, 
+  index, 
+  auth, 
+  toggleModal,
+  setClickedId,
+) {
   const isHidden = auth?.user?.id ? 'opacity-100' : 'opacity-0';
 
   return (
@@ -28,7 +35,12 @@ export function LibraryCard(book, index, auth) {
       <div className='w-1/6'>{book.year_published}</div>
       <div className='w-1/6'>{book.volume}</div>
       <UpdateButton book={book} className={isHidden} />
-      <DeleteButton book={book} className={isHidden} />
+      <DeleteButton 
+        book={book} 
+        className={isHidden} 
+        toggleModal={toggleModal} 
+        setClickedId={setClickedId}
+      />
     </li>
   )
 }
@@ -51,9 +63,16 @@ export function UpdateButton({ book, className }) {
   )
 }
 
-export function DeleteButton({ book, className }) {
+// export function DeleteModal() {
+//   Modal.setAppElement('#root');
+//   return (
+
+//   );
+// }
+
+export function DeleteButton({ book, className, toggleModal, setClickedId }) {
   return (
-    <Link 
+    <button 
       className={`
         w-1.5
         h-1.5
@@ -61,17 +80,46 @@ export function DeleteButton({ book, className }) {
         transition-all
         ${className}
       `}
-      href={route('books.destroy', book.id)}
-      method="delete"
-      as='button'
-      title='Delete'
+      onClick={() => setClickedId(book?.id) || toggleModal()}
     >
       <FontAwesomeIcon icon={faTrash} />
-    </Link>
+    </button>
   )
 }
 
 export default function ({ auth, books }) {
+  Modal.setAppElement('#app');
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [clickedId, setClickedId] = useState(0);
+  
+  function toggleModal() {
+    setModalIsOpen(!modalIsOpen);
+  }
+
+  function closeModal() {
+    setModalIsOpen(false);
+  }
+
+  const deleteModalCustomStyle = {
+    content: {
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: '50vw',
+      height: '25vh',
+      opacity: '1',
+      borderRadius: '1rem',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'space-evenly',
+    },
+    overlay: {
+      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+      backdropFilter: 'blur(2px)',
+    },
+  }
+
   return (
     <div className="
       w-100
@@ -105,8 +153,82 @@ export default function ({ auth, books }) {
         py-1
         text-white
       '>
-        {books.map((bk, index) => LibraryCard(bk, index, auth))}
+        {books.map((bk, index) => LibraryCard(bk, index, auth, toggleModal, setClickedId))}
       </ul>
+      <Modal
+        isOpen={modalIsOpen}
+        contentLabel="Delete this Book?"
+        onRequestClose={toggleModal}
+        onAfterClose={() => setClickedId(0)}
+        style={deleteModalCustomStyle}
+        closeTimeoutMS={250}
+      >
+        <h1
+          className='
+            flex
+            flex-column
+            align-center
+            justify-center
+            text-3xl
+            font-bold
+          '
+        >
+          Do you wish to delete this book?
+        </h1>
+        <div className="
+          flex
+          justify-evenly
+          w-full
+        ">
+          <Link 
+            className='
+              text-white
+              text-lg
+              border-2
+              border-red-500
+              bg-red-500
+              hover:text-red-500
+              hover:bg-white
+              transition-all
+              rounded-md
+              px-4
+              py-2
+            '
+
+            href={route('books.destroy', clickedId)}
+            method="delete"
+            as='button'
+            title='Delete'
+            onClick={toggleModal}
+          >
+            <FontAwesomeIcon icon={faTrash} />
+            <span className='ml-1'>
+              Delete
+            </span>
+          </Link>
+          <button 
+            onClick={toggleModal}
+            className='
+              text-white
+              text-lg
+              border-2
+              border-black
+              bg-black
+              hover:text-black
+              hover:bg-white
+              transition-all
+              rounded-md
+              px-4
+              py-2
+            '
+          >
+            <FontAwesomeIcon icon={faCancel} />
+            <span className='ml-1'>
+              Cancel
+            </span>
+          </button>
+        </div>
+      </Modal>
     </div>
   )
 }
