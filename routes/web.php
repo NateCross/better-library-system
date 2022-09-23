@@ -19,22 +19,21 @@ use App\Models\book;
 |
 */
 
-Route::get('/', function () {
-    $controller = new BookController;
-    return $controller->welcome();
+Route::controller(BookController::class)->group(function() {
+    Route::get('/', 'welcome');
+    Route::get('/update/{id}', 'edit')
+        ->middleware(['auth']);
+    Route::patch('/borrow/{book}', 'borrowReturn')
+        ->middleware(['auth'])
+        ->name('books.borrow');
 });
 
-Route::get('/update/{id}', function (Request $request, $id) {
-    $controller = new BookController;
-    return $controller->edit($request, $id);
-})->middleware(['auth']);
+Route::resource('books', BookController::class)
+    ->only(['index', 'store', 'update', 'destroy', 'borrowReturn'])
+    ->middleware(['auth']);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth'])->name('dashboard');
-
-Route::resource('books', BookController::class)
-    ->only(['index', 'store', 'update', 'destroy'])
-    ->middleware(['auth']);
 
 require __DIR__.'/auth.php';

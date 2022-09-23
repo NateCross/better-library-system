@@ -4,12 +4,10 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import LibraryDisplay from '@/Components/LibraryDisplay';
 
 export default function Welcome({ auth, books }) {
-  console.log(books);
   return (
     <>
       <AuthenticatedLayout
           auth={auth}
-          /* errors={} */
       >
         <Head title='Home' />
 

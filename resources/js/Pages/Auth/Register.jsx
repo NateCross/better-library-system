@@ -35,23 +35,6 @@ export default function Register() {
             <Head title="Register" />
 
             <form onSubmit={submit}>
-                <div>
-                    <InputLabel forInput="name" value="Name" />
-
-                    <TextInput
-                        type="text"
-                        name="name"
-                        value={data.name}
-                        className="mt-1 block w-full"
-                        autoComplete="name"
-                        isFocused={true}
-                        handleChange={onHandleChange}
-                        required
-                    />
-
-                    <InputError message={errors.name} className="mt-2" />
-                </div>
-
                 <div className="mt-4">
                     <InputLabel forInput="username" value="Username" />
 
@@ -66,6 +49,23 @@ export default function Register() {
                     />
 
                     <InputError message={errors.username} className="mt-2" />
+                </div>
+
+                <div className='mt-4'>
+                    <InputLabel forInput="name" value="Full Name" />
+
+                    <TextInput
+                        type="text"
+                        name="name"
+                        value={data.name}
+                        className="mt-1 block w-full"
+                        autoComplete="name"
+                        isFocused={true}
+                        handleChange={onHandleChange}
+                        required
+                    />
+
+                    <InputError message={errors.name} className="mt-2" />
                 </div>
 
                 <div className="mt-4">

@@ -76,21 +76,14 @@ export default function Authenticated({ auth, header, children }) {
           <div className="flex justify-between h-16">
             <div className="flex">
               <div className="shrink-0 flex items-center">
-                <Link href="/">
+                <Link href="/" className='hover:text-gray-500 transition-all'>
                   <div className="font-bold text-3xl flex items-center justify-between space-x-1">
                     <FontAwesomeIcon icon={faBook} />
                     <h1>
                       theLib.sys
                     </h1>
                   </div>
-                  {/* <ApplicationLogo className="block h-9 w-auto text-gray-500" /> */}
                 </Link>
-              </div>
-
-              <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                <NavLink href={route('books.index')} active={route().current('books.index')}>
-                  <p className='hover:text-gray-500'>Add a Book</p>
-                </NavLink>
               </div>
             </div>
 

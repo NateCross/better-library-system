@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/inertia-react';
 import Modal from 'react-modal';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faCancel } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faCancel, faLock } from '@fortawesome/free-solid-svg-icons';
 
 export function LibraryCard(
   book, 
@@ -20,6 +20,8 @@ export function LibraryCard(
       className="
         flex
         flex-row
+        break-words
+        items-center
         gap-7
         bg-white
         text-black
@@ -29,11 +31,12 @@ export function LibraryCard(
         my-2
       "
     >
-      <h3 className='w-1/3'>{book.title}</h3>
-      <div className='w-1/5'>{book.authors[0].name}</div>
-      <div className='w-1/5'>{book.publisher.name}</div>
-      <div className='w-1/6'>{book.year_published}</div>
-      <div className='w-1/6'>{book.volume}</div>
+      <h3 className='w-[27.5%] min-w-[27.5%]'>{book.title}</h3>
+      <div className='w-[15%] min-w-[15%]'>{book.authors[0].name}</div>
+      <div className='w-1/5 min-w-[20%]'>{book.publisher.name}</div>
+      <div className='w-1/12'>{book.year_published}</div>
+      <div className='w-[3%]'>{book.volume}</div>
+      <BorrowReturnButton book={book} className={isHidden} />
       <UpdateButton book={book} className={isHidden} />
       <DeleteButton 
         book={book} 
@@ -53,6 +56,7 @@ export function UpdateButton({ book, className }) {
         h-1.5
         hover:text-amber-500
         transition-all
+        mb-4
         ${className}
       `}
       href={`/update/${book.id}`}
@@ -63,19 +67,13 @@ export function UpdateButton({ book, className }) {
   )
 }
 
-// export function DeleteModal() {
-//   Modal.setAppElement('#root');
-//   return (
-
-//   );
-// }
-
 export function DeleteButton({ book, className, toggleModal, setClickedId }) {
   return (
     <button 
       className={`
         w-1.5
         h-1.5
+        mb-4
         hover:text-red-500
         transition-all
         ${className}
@@ -87,6 +85,57 @@ export function DeleteButton({ book, className, toggleModal, setClickedId }) {
   )
 }
 
+export function BorrowReturnButton({ book, className }) {
+  return !book?.is_borrowed ? (
+    <Link 
+      className={`
+        min-w-[8.5%]
+        border-green-500
+        border-2
+        text-white
+        bg-green-500
+        hover:text-green-500
+        hover:bg-white
+        transition-all
+        ${className}
+        rounded-lg
+        px-4
+        py-1
+        text-center
+      `}
+      href={route('books.borrow', book?.id)}
+      title='Borrow'
+      method='patch'
+      as='button'
+    >
+      Borrow
+    </Link>
+  ) : (
+    <Link 
+      className={`
+        min-w-[8.5%]
+        border-yellow-500
+        border-2
+        text-white
+        bg-yellow-500
+        hover:text-yellow-500
+        hover:bg-white
+        transition-all
+        ${className}
+        rounded-lg
+        px-4
+        py-1
+      `}
+      href={route('books.borrow', book?.id)}
+      title='Return'
+      method='patch'
+      as='button'
+    >
+      Return
+    </Link>
+  )
+}
+
 export default function ({ auth, books }) {
   Modal.setAppElement('#app');
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -94,10 +143,6 @@ export default function ({ auth, books }) {
   
   function toggleModal() {
     setModalIsOpen(!modalIsOpen);
-  }
-
-  function closeModal() {
-    setModalIsOpen(false);
   }
 
   const deleteModalCustomStyle = {
@@ -122,25 +167,56 @@ export default function ({ auth, books }) {
 
   return (
     <div className="
-      w-100
-      grid
-      place-items-center
-      my-8
+      w-screen
+      flex
+      flex-col
+      items-center
+      justify-center
+      my-2
     ">
+      <div className="
+        flex
+        justify-end
+        my-4
+        w-5/6
+      ">
+        <Link
+          className={`
+            ${auth?.user?.id ? 'bg-red-700 border-red-700 hover:text-red-700' 
+            : 'bg-gray-500 border-gray-500 hover:text-gray-500' }
+            text-white
+            hover:bg-white
+            px-6
+            py-3
+            font-bold
+            text-xl
+            border-2
+            rounded-xl
+            transition-all
+            flex
+            gap-1
+            items-center
+            min-w-[5rem]
+          `}
+          href={route('books.index')}
+        >
+          {!auth?.user?.id && <FontAwesomeIcon icon={faLock} />}
+          Add Book
+        </Link>
+      </div>
       <div className="
       text-black
         flex
         flex-nowrap
-        gap-7
         w-5/6
         items-center
         justify-center
         font-extrabold
         px-7
       ">
-        <h2 className='w-[30%] mr-[2.5%]'>Title</h2>
+        <h2 className='w-[30%] mr-[3.3%]'>Title</h2>
         <h3 className='w-1/5'>Author(s)</h3>
-        <h3 className='w-1/5'>Publisher</h3>
+        <h3 className='w-[17%]'>Publisher</h3>
         <h3 className='w-1/6'>Year Published</h3>
         <h3 className='w-1/4'>Volume</h3>
       </div>
@@ -194,7 +270,6 @@ export default function ({ auth, books }) {
               px-4
               py-2
             '
-
             href={route('books.destroy', clickedId)}
             method="delete"
             as='button'

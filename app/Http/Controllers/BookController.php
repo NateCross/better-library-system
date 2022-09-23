@@ -11,7 +11,6 @@ use Illuminate\Foundation\Application;
 use App\Models\book;
 use App\Models\author;
 use App\Models\publisher;
-use App\Providers\RouteServiceProvider;
 
 class BookController extends Controller
 {
@@ -40,8 +39,8 @@ class BookController extends Controller
 
     private function createBook(
         string $title,
-        string $year_published,
-        string $volume,
+        string | null $year_published,
+        string | null $volume,
     ): object {
         return book::create([
             'title' => $title,
@@ -90,17 +89,13 @@ class BookController extends Controller
 
     private function getBook($id) {
         $book = $this->getBookById($id);
-        $book->authors;     // Appends an array of authors to the book
+        $book->authors;
         $book->publisher;
         return $book;
     }
 
     private function getBookById($id): book {
         return book::findOrFail($id);
-    }
-
-    private function getByBookTitle(string $bookTitle): book {
-        return book::firstWhere('title', $bookTitle);
     }
 
     public function getAllBooks() {
@@ -134,10 +129,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        // return 'Hello World!';
-        return Inertia::render('Books/Index', [
-            'books' => $this->getAllBooks(), // temp until pagination docs loads
-        ]);
+        return Inertia::render('Books/Index');
     }
 
     public function welcome()
@@ -150,49 +142,6 @@ class BookController extends Controller
             'books' => $this->getAllBooks(),
         ]);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    // public function store(Request $request)
-    // {
-    //     //
-    // }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Book  $book
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Book $book)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Book  $book
-     * @return \Illuminate\Http\Response
-     */
-    // public function edit(Book $book)
-    // {
-    //     //
-    // }
 
     /**
      * Update the specified resource in storage.
@@ -231,9 +180,14 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        // $this->authorize('delete', $book);
         $book->authors()->detach();
         $book->delete();
+        return redirect('/');
+    }
+
+    public function borrowReturn(Book $book) {
+        $book['is_borrowed'] = !$book['is_borrowed'];
+        $book->push();
         return redirect('/');
     }
 }

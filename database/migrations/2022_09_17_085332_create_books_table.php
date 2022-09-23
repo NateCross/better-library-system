@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('publisher_id')->nullable();
             $table->year('year_published')->nullable();
             $table->string('volume')->nullable();
+            $table->boolean('is_borrowed')->default(false);
             $table->timestamps();
         });
     }
