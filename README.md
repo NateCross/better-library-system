@@ -1,6 +1,23 @@
+# theLib.sys
+
+A simple library system developed with Laravel and React.
+
+Based on [Laravel Breeze](https://github.com/laravel/breeze).
+
+## Features
+
+- Register/Login
+- CRUD for books
+- Borrow and return books
+
+## TODO
+
+- [ ] Search available books
+
 # Quick Notes
 
-- use `php artisan serve`. `npm run dev` does not seem to work.
+- Use `php artisan serve` and`npm run dev` for testing.
+- Don't forget to start the database first.
 
 # Original Readme Follows
 
