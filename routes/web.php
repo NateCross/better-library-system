@@ -26,7 +26,7 @@ Route::get('/', function () {
 
 Route::get('/update/{id}', function (Request $request, $id) {
     $controller = new BookController;
-    return $controller->updateBook($request, $id);
+    return $controller->edit($request, $id);
 })->middleware(['auth']);
 
 Route::get('/dashboard', function () {

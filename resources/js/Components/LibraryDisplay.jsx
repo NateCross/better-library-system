@@ -4,7 +4,9 @@ import { Link } from '@inertiajs/inertia-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
-export function LibraryCard(book, index) {
+export function LibraryCard(book, index, auth) {
+  const isHidden = auth?.user?.id ? 'opacity-100' : 'opacity-0';
+
   return (
     <li 
       key={index}
@@ -17,7 +19,7 @@ export function LibraryCard(book, index) {
         rounded-lg
         px-5
         py-3
-        my-3
+        my-2
       "
     >
       <h3 className='w-1/3'>{book.title}</h3>
@@ -25,37 +27,44 @@ export function LibraryCard(book, index) {
       <div className='w-1/5'>{book.publisher.name}</div>
       <div className='w-1/6'>{book.year_published}</div>
       <div className='w-1/6'>{book.volume}</div>
-      <UpdateButton book={book} />
-      <DeleteButton book={book} />
+      <UpdateButton book={book} className={isHidden} />
+      <DeleteButton book={book} className={isHidden} />
     </li>
   )
 }
 
-export function UpdateButton({ book }) {
+export function UpdateButton({ book, className }) {
   return (
     <Link 
-      className="
+      className={`
         w-1.5
         h-1.5
-        bg-black
-      "
+        hover:text-amber-500
+        transition-all
+        ${className}
+      `}
       href={`/update/${book.id}`}
+      title='Edit Details'
     >
       <FontAwesomeIcon icon={faEdit} />
     </Link>
   )
 }
 
-export function DeleteButton({ book }) {
+export function DeleteButton({ book, className }) {
   return (
     <Link 
-      className="
+      className={`
         w-1.5
         h-1.5
-        bg-black
-      "
+        hover:text-red-500
+        transition-all
+        ${className}
+      `}
       href={route('books.destroy', book.id)}
       method="delete"
+      as='button'
+      title='Delete'
     >
       <FontAwesomeIcon icon={faTrash} />
     </Link>
@@ -81,24 +90,23 @@ export default function ({ auth, books }) {
         font-extrabold
         px-7
       ">
-        <h2 className='w-1/3'>Title</h2>
+        <h2 className='w-[30%] mr-[2.5%]'>Title</h2>
         <h3 className='w-1/5'>Author(s)</h3>
         <h3 className='w-1/5'>Publisher</h3>
         <h3 className='w-1/6'>Year Published</h3>
-        <h3 className='w-1/6'>Volume</h3>
+        <h3 className='w-1/4'>Volume</h3>
       </div>
       <ul className='
         bg-red-700 
         w-5/6
         rounded-xl
         drop-shadow-xl
-        px-7
-        py-2
+        px-3
+        py-1
         text-white
       '>
-        {books.map((bk, index) => LibraryCard(bk, index))}
+        {books.map((bk, index) => LibraryCard(bk, index, auth))}
       </ul>
-
     </div>
   )
 }

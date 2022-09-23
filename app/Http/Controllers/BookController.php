@@ -117,23 +117,6 @@ class BookController extends Controller
         return response($books);
     }
 
-    // public function update(Request $request, $id) {
-    //     $input = $this->validateBookInput($request);
-
-    //     $book = $this->getBookById($id);
-
-    //     $author = $this->createOrFindAuthor($input['author']);
-    //     $publisher = $this->createOrFindPublisher($input['publisher']);
-
-    //     $book['title'] = $input['title'];
-    //     $book['year_published'] = $input['year_published'];
-    //     $book['volume'] = $input['volume'];
-
-    //     $this->assignRelationsToBook($book, $publisher, $author);
-
-    //     return response('Successfully edited.');
-    // }
-
     public function delete($id) {
         $book = book::find($id);
 
@@ -206,10 +189,10 @@ class BookController extends Controller
      * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function edit(Book $book)
-    {
-        //
-    }
+    // public function edit(Book $book)
+    // {
+    //     //
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -230,12 +213,11 @@ class BookController extends Controller
         $book['volume'] = $input['volume'];
 
         $this->assignRelationsToBook($book, $publisher, $author);
-        // $book->update($input);
 
         return redirect('/');
     }
 
-    public function updateBook(Request $request, $id) {
+    public function edit(Request $request, $id) {
         return Inertia::render('Books/Update', [
             'book' => $this->getBook($id),
         ]);
