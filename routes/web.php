@@ -26,6 +26,8 @@ Route::controller(BookController::class)->group(function() {
     Route::patch('/borrow/{book}', 'borrowReturn')
         ->middleware(['auth'])
         ->name('books.borrow');
+    Route::get('/view/{book}', 'view')
+        ->name('books.view');
 });
 
 Route::resource('books', BookController::class)

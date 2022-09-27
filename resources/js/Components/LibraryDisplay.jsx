@@ -3,7 +3,10 @@ import { Link } from '@inertiajs/inertia-react';
 import Modal from 'react-modal';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faCancel, faLock } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faCancel, faLock } from '@fortawesome/free-solid-svg-icons';
+import { BorrowReturnButton } from './BorrowReturnButton';
+import { UpdateButton } from './UpdateButton';
+import { DeleteButton } from './DeleteButton';
 
 export function LibraryCard(
   book, 
@@ -17,122 +20,48 @@ export function LibraryCard(
   return (
     <li 
       key={index}
-      className="
-        flex
-        flex-row
-        break-words
-        items-center
-        gap-7
-        bg-white
-        text-black
-        rounded-lg
-        px-5
-        py-3
-        my-2
-      "
     >
-      <h3 className='w-[27.5%] min-w-[27.5%]'>{book.title}</h3>
-      <div className='w-[15%] min-w-[15%]'>{book.authors[0].name}</div>
-      <div className='w-1/5 min-w-[20%]'>{book.publisher.name}</div>
-      <div className='w-1/12'>{book.year_published}</div>
-      <div className='w-[3%]'>{book.volume}</div>
-      <BorrowReturnButton book={book} className={isHidden} />
-      <UpdateButton book={book} className={isHidden} />
-      <DeleteButton 
-        book={book} 
-        className={isHidden} 
-        toggleModal={toggleModal} 
-        setClickedId={setClickedId}
-      />
+      <Link
+        className='
+          flex
+          flex-row
+          break-words
+          items-center
+          gap-7
+          bg-white
+          text-black
+          rounded-lg
+          px-5
+          py-3
+          my-2
+          hover:bg-gray-300
+          transition-all
+        '
+        href={route('books.view', book?.id)}
+        onClick={(e) => {
+          console.log(e);
+          if (e.currentTarget != e.target) return;
+        }}
+      >
+        <h3 className='w-[27.5%] min-w-[27.5%]'>{book.title}</h3>
+        <div className='w-[15%] min-w-[15%]'>{book.authors[0].name}</div>
+        <div className='w-1/5 min-w-[20%]'>{book.publisher.name}</div>
+        <div className='w-1/12'>{book.year_published}</div>
+        <div className='w-[3%]'>{book.volume}</div>
+        <BorrowReturnButton book={book} className={isHidden} />
+        <UpdateButton book={book} className={isHidden} />
+        <DeleteButton 
+          book={book} 
+          className={isHidden} 
+          toggleModal={toggleModal} 
+          onClick={(e) => {
+            e.stopPropagation();
+            setClickedId(book?.id);
+            toggleModal();
+          }}
+        />
+      </Link>
     </li>
-  )
-}
-
-export function UpdateButton({ book, className }) {
-  return (
-    <Link 
-      className={`
-        w-1.5
-        h-1.5
-        hover:text-amber-500
-        transition-all
-        mb-4
-        ${className}
-      `}
-      href={`/update/${book.id}`}
-      title='Edit Details'
-    >
-      <FontAwesomeIcon icon={faEdit} />
-    </Link>
-  )
-}
-
-export function DeleteButton({ book, className, toggleModal, setClickedId }) {
-  return (
-    <button 
-      className={`
-        w-1.5
-        h-1.5
-        mb-4
-        hover:text-red-500
-        transition-all
-        ${className}
-      `}
-      onClick={() => setClickedId(book?.id) || toggleModal()}
-    >
-      <FontAwesomeIcon icon={faTrash} />
-    </button>
-  )
-}
-
-export function BorrowReturnButton({ book, className }) {
-  return !book?.is_borrowed ? (
-    <Link 
-      className={`
-        min-w-[8.5%]
-        border-green-500
-        border-2
-        text-white
-        bg-green-500
-        hover:text-green-500
-        hover:bg-white
-        transition-all
-        ${className}
-        rounded-lg
-        px-4
-        py-1
-        text-center
-      `}
-      href={route('books.borrow', book?.id)}
-      title='Borrow'
-      method='patch'
-      as='button'
-    >
-      Borrow
-    </Link>
-  ) : (
-    <Link 
-      className={`
-        min-w-[8.5%]
-        border-yellow-500
-        border-2
-        text-white
-        bg-yellow-500
-        hover:text-yellow-500
-        hover:bg-white
-        transition-all
-        ${className}
-        rounded-lg
-        px-4
-        py-1
-      `}
-      href={route('books.borrow', book?.id)}
-      title='Return'
-      method='patch'
-      as='button'
-    >
-      Return
-    </Link>
   )
 }
 
@@ -172,7 +101,8 @@ export default function ({ auth, books }) {
       flex-col
       items-center
       justify-center
-      my-2
+      mt-2
+      mb-6
     ">
       <div className="
         flex

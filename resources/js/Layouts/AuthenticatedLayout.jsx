@@ -77,7 +77,7 @@ export default function Authenticated({ auth, header, children }) {
             <div className="flex">
               <div className="shrink-0 flex items-center">
                 <Link href="/" className='hover:text-gray-500 transition-all'>
-                  <div className="font-bold text-3xl flex items-center justify-between space-x-1">
+                  <div className="font-bold text-3xl flex items-center justify-between space-x-2">
                     <FontAwesomeIcon icon={faBook} />
                     <h1>
                       theLib.sys

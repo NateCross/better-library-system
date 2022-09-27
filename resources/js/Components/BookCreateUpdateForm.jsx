@@ -16,15 +16,15 @@ export default function BookCreateUpdateForm({
     <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
       <form onSubmit={onSubmit}>
         <div className="flex flex-col">
-          <label htmlFor="title">Title</label>
+          <label htmlFor="title">Title*</label>
           <input className="mb-3" type="text" name="title" id="title" value={data.title} onChange={e => setData('title', e.target.value)}/>
           <InputError message={errors.title} className="mt-2" />
 
-          <label htmlFor="author">Author</label>
+          <label htmlFor="author">Author*</label>
           <input className="mb-3" type="text" name="author" id="author" value={data.author} onChange={e => setData('author', e.target.value)}/>
           <InputError message={errors.author} className="mt-2" />
 
-          <label htmlFor="publisher">Publisher</label>
+          <label htmlFor="publisher">Publisher*</label>
           <input className="mb-3" type="text" name="publisher" id="publisher" value={data.publisher} onChange={e => setData('publisher', e.target.value)}/>
           <InputError message={errors.publisher} className="mt-2" />
 
@@ -58,9 +58,10 @@ export default function BookCreateUpdateForm({
               font-bold
               transition-all
             '
+            disabled={processing}
             type='submit'
           >
-            Save Book
+          { processing ? "Saving..." : "Save Book"}
           </button>
           <Link
             className='

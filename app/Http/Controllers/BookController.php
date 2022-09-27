@@ -188,6 +188,13 @@ class BookController extends Controller
     public function borrowReturn(Book $book) {
         $book['is_borrowed'] = !$book['is_borrowed'];
         $book->push();
-        return redirect('/');
+    }
+
+    public function view(Book $book) {
+        return Inertia::render('Books/View', [
+            'book' => $book,
+            'authors' => $book->authors,
+            'publisher' => $book->publisher,
+        ]);
     }
 }
