@@ -38,9 +38,6 @@ export function LibraryCard(
           transition-all
         '
         href={route('books.view', book?.id)}
-        onClick={(e) => {
-          if (e.currentTarget != e.target) return;
-        }}
       >
         <h3 className='w-1/3 min-w-1/3 lg:w-[27.5%] sm:min-w-[27.5%] sm:w-1/2 lg:w-[27.5%}'>{book.title}</h3>
         <div className='w-1/3 min-w-1/3 sm:w-[15%] sm:min-w-[15%]'>{book.authors[0].name}</div>
