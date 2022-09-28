@@ -27,7 +27,7 @@ function ReturnHomeButton() {
 }
 
 function BookDisplay({ book, authors, publisher, auth, toggleModal }) {
-  const isHidden = auth?.user?.id ? 'opacity-100' : 'opacity-0';
+  const isHidden = auth?.user?.id ? 'opacity-100' : 'opacity-0 pointer-events-none';
 
   return (
     <div className="
@@ -97,7 +97,6 @@ function BookDisplay({ book, authors, publisher, auth, toggleModal }) {
 export default function View({ auth, book, authors, publisher }) {
   Modal.setAppElement('#app');
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  // const [clickedId, setClickedId] = useState(0);
   
   function toggleModal() {
     setModalIsOpen(!modalIsOpen);

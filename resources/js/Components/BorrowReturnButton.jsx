@@ -11,6 +11,8 @@ export function BorrowReturnButton({ book, className }) {
     <Link
       className={`
         min-w-[8.5%]
+        lg:min-w-[12.5%]
+        xl:min-w-[8.5%]
         border-green-500
         border-2
         text-white
@@ -42,6 +44,8 @@ export function BorrowReturnButton({ book, className }) {
     <Link
       className={`
         min-w-[8.5%]
+        lg:min-w-[12.5%]
+        xl:min-w-[8.5%]
         border-yellow-500
         border-2
         text-white

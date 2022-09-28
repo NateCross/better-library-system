@@ -6,16 +6,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faCancel, faLock } from '@fortawesome/free-solid-svg-icons';
 import { BorrowReturnButton } from './BorrowReturnButton';
 import { UpdateButton } from './UpdateButton';
-import { DeleteButton } from './DeleteButton';
 
 export function LibraryCard(
   book, 
   index, 
   auth, 
-  toggleModal,
-  setClickedId,
 ) {
-  const isHidden = auth?.user?.id ? 'opacity-100' : 'opacity-0';
+  const isHidden = auth?.user?.id ? 'opacity-100' : 'opacity-0 pointer-events-none';
 
   return (
     <li 
@@ -39,27 +36,16 @@ export function LibraryCard(
         '
         href={route('books.view', book?.id)}
         onClick={(e) => {
-          console.log(e);
           if (e.currentTarget != e.target) return;
         }}
       >
-        <h3 className='w-[27.5%] min-w-[27.5%]'>{book.title}</h3>
+        <h3 className='w-[27.5%] min-w-[27.5%] sm:w-1/2 lg:w-[27.5%}'>{book.title}</h3>
         <div className='w-[15%] min-w-[15%]'>{book.authors[0].name}</div>
-        <div className='w-1/5 min-w-[20%]'>{book.publisher.name}</div>
-        <div className='w-1/12'>{book.year_published}</div>
-        <div className='w-[3%]'>{book.volume}</div>
+        <div className='w-1/5 min-w-[20%] sm:hidden lg:block'>{book.publisher.name}</div>
+        <div className='w-1/12 sm:hidden xl:block'>{book.year_published}</div>
+        <div className='w-[3%] sm:hidden xl:block'>{book.volume}</div>
         <BorrowReturnButton book={book} className={isHidden} />
         <UpdateButton book={book} className={isHidden} />
-        <DeleteButton 
-          book={book} 
-          className={isHidden} 
-          toggleModal={toggleModal} 
-          onClick={(e) => {
-            e.stopPropagation();
-            setClickedId(book?.id);
-            toggleModal();
-          }}
-        />
       </Link>
     </li>
   )
@@ -144,11 +130,11 @@ export default function ({ auth, books }) {
         font-extrabold
         px-7
       ">
-        <h2 className='w-[30%] mr-[3.3%]'>Title</h2>
+        <h2 className='w-[30%] mr-[15%]'>Title</h2>
         <h3 className='w-1/5'>Author(s)</h3>
-        <h3 className='w-[17%]'>Publisher</h3>
-        <h3 className='w-1/6'>Year Published</h3>
-        <h3 className='w-1/4'>Volume</h3>
+        <h3 className='w-[17%] sm:hidden lg:block'>Publisher</h3>
+        <h3 className='w-1/6 sm:hidden xl:block'>Year Published</h3>
+        <h3 className='w-1/4 sm:hidden lg:block invisible xl:visible'>Volume</h3>
       </div>
       <ul className='
         bg-red-700 
@@ -159,7 +145,7 @@ export default function ({ auth, books }) {
         py-1
         text-white
       '>
-        {books.map((bk, index) => LibraryCard(bk, index, auth, toggleModal, setClickedId))}
+        {books.map((bk, index) => LibraryCard(bk, index, auth))}
       </ul>
       <Modal
         isOpen={modalIsOpen}
