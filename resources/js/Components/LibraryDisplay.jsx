@@ -24,7 +24,8 @@ export function LibraryCard(
           flex-row
           break-words
           items-center
-          gap-7
+          gap-9
+          sm:gap-7
           bg-white
           text-black
           rounded-lg
@@ -32,6 +33,8 @@ export function LibraryCard(
           py-3
           my-2
           hover:bg-gray-300
+          justify-evenly
+          sm:justify-start
           transition-all
         '
         href={route('books.view', book?.id)}
@@ -39,13 +42,13 @@ export function LibraryCard(
           if (e.currentTarget != e.target) return;
         }}
       >
-        <h3 className='w-[27.5%] min-w-[27.5%] sm:w-1/2 lg:w-[27.5%}'>{book.title}</h3>
-        <div className='w-[15%] min-w-[15%]'>{book.authors[0].name}</div>
-        <div className='w-1/5 min-w-[20%] sm:hidden lg:block'>{book.publisher.name}</div>
-        <div className='w-1/12 sm:hidden xl:block'>{book.year_published}</div>
-        <div className='w-[3%] sm:hidden xl:block'>{book.volume}</div>
-        <BorrowReturnButton book={book} className={isHidden} />
-        <UpdateButton book={book} className={isHidden} />
+        <h3 className='w-1/3 min-w-1/3 lg:w-[27.5%] sm:min-w-[27.5%] sm:w-1/2 lg:w-[27.5%}'>{book.title}</h3>
+        <div className='w-1/3 min-w-1/3 sm:w-[15%] sm:min-w-[15%]'>{book.authors[0].name}</div>
+        <div className='hidden sm:w-1/5 sm:min-w-[20%] sm:hidden lg:block'>{book.publisher.name}</div>
+        <div className='hidden sm:w-1/12 sm:hidden xl:block'>{book.year_published}</div>
+        <div className='hidden sm:w-[3%] sm:hidden xl:block'>{book.volume}</div>
+        <BorrowReturnButton book={book} className={`${isHidden} hidden sm:block`} />
+        <UpdateButton book={book} className={`${isHidden} hidden sm:block`}/>
       </Link>
     </li>
   )
@@ -121,20 +124,23 @@ export default function ({ auth, books }) {
         </Link>
       </div>
       <div className="
-      text-black
+        text-black
         flex
         flex-nowrap
         w-5/6
         items-center
-        justify-center
+        justify-evenly
+        sm:justify-center
         font-extrabold
         px-7
+        sm:gap-0
+        gap-16
       ">
-        <h2 className='w-[30%] mr-[15%]'>Title</h2>
-        <h3 className='w-1/5'>Author(s)</h3>
-        <h3 className='w-[17%] sm:hidden lg:block'>Publisher</h3>
-        <h3 className='w-1/6 sm:hidden xl:block'>Year Published</h3>
-        <h3 className='w-1/4 sm:hidden lg:block invisible xl:visible'>Volume</h3>
+        <h2 className='sm:w-[30%] sm:mr-[10%]'>Title</h2>
+        <h3 className='sm:w-1/5'>Author(s)</h3>
+        <h3 className='hidden sm:w-[17%] sm:hidden lg:block'>Publisher</h3>
+        <h3 className='hidden sm:w-1/6 sm:hidden xl:block'>Year Published</h3>
+        <h3 className='hidden sm:w-1/4 sm:hidden lg:block invisible xl:visible'>Volume</h3>
       </div>
       <ul className='
         bg-red-700 
