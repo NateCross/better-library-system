@@ -87,39 +87,8 @@ export default function ({ auth, books }) {
       flex-col
       items-center
       justify-center
-      mt-2
-      mb-6
+      my-6
     ">
-      <div className="
-        flex
-        justify-end
-        my-4
-        w-5/6
-      ">
-        <Link
-          className={`
-            ${auth?.user?.id ? 'bg-red-700 border-red-700 hover:text-red-700' 
-            : 'bg-gray-500 border-gray-500 hover:text-gray-500' }
-            text-white
-            hover:bg-white
-            px-6
-            py-3
-            font-bold
-            text-xl
-            border-2
-            rounded-xl
-            transition-all
-            flex
-            gap-1
-            items-center
-            min-w-[5rem]
-          `}
-          href={route('books.index')}
-        >
-          {!auth?.user?.id && <FontAwesomeIcon icon={faLock} />}
-          Add Book
-        </Link>
-      </div>
       <div className="
         text-black
         flex

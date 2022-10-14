@@ -3,6 +3,8 @@ import { Link, Head } from '@inertiajs/inertia-react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import LibraryDisplay from '@/Components/LibraryDisplay';
 
+import AddBookButton from '@/Components/AddBookButton';
+
 export default function Welcome({ auth, books }) {
   return (
     <>
@@ -10,6 +12,18 @@ export default function Welcome({ auth, books }) {
           auth={auth}
       >
         <Head title='Home' />
+
+        { auth?.user?.id && 
+          <div className='
+            w-11/12
+            flex
+            mt-4
+            items-center
+            justify-end
+          '>
+            <AddBookButton /> 
+          </div>
+        }
 
         {
           books.length ? (
@@ -43,7 +57,7 @@ export default function Welcome({ auth, books }) {
                   mx-9
                 '
               >
-                Please add a book to use.
+                Please register or login to add a book.
               </h1>
             </div>
           )
