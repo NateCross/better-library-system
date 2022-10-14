@@ -80,7 +80,7 @@ export default function Authenticated({ auth, header, children }) {
                   <div className="font-bold text-3xl flex items-center justify-between space-x-2">
                     <FontAwesomeIcon icon={faBook} />
                     <h1>
-                      theLib.sys
+                      theLibSys
                     </h1>
                   </div>
                 </Link>

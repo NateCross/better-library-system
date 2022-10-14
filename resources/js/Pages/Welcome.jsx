@@ -34,7 +34,7 @@ export default function Welcome({ auth, books }) {
           ) : (
             <div className="
               grid
-              h-[90vh]
+              h-[85vh]
               place-items-center
             ">
               <h1
